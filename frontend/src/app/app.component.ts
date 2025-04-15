@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { HeaderComponent } from './layout/header/header/header.component';
-import { Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { FooterComponent } from "./layout/footer/footer.component";
 import { CommonModule } from '@angular/common';
 import { CookieBannerComponent } from './layout/cookie/cookie-banner/cookie-banner.component';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -15,5 +16,15 @@ export class AppComponent {
 
   constructor(public router: Router) {}
 
+  ngOnInit() {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd
+      )
+    ).subscribe(() => {
+      window.scrollTo(0, 0);
+    });
+  }
+
   title = 'gyogynovenykereso';
+  
 }
