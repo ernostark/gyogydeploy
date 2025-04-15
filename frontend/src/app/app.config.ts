@@ -7,6 +7,7 @@ import { provideRouter, withViewTransitions } from '@angular/router';
 import { routes } from './app.routes';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { RelatedContentService } from './shared/services/related-content-service.service';
+import { CookieBannerComponent } from './layout/cookie/cookie-banner/cookie-banner.component';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,7 +15,8 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(ReactiveFormsModule),
     provideRouter(routes, withViewTransitions()),
     provideAnimations(),
-    RelatedContentService
+    RelatedContentService,
+    CookieBannerComponent
   ],
 };
 

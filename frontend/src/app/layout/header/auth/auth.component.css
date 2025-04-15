@@ -1,3 +1,15 @@
+.disclaimer-container {
+  font-size: 1.1rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 991px) {
+  .disclaimer-container {
+    margin: 10px 0;
+    justify-content: center;
+  }
+}
+
 .custom-shadow {
   box-shadow:
     0 8px 20px rgba(0, 0, 0, 0.15),
