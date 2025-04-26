@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { AuthService } from '../../../shared/services/auth.service';
 import {
   AbstractControl,
@@ -15,6 +15,8 @@ import { LogoComponent } from '../logo/logo.component';
 import { SharedService } from '../../../shared/services/shared.service';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { CartDropdownComponent } from "../../../webshop/cart/cart-dropdown/cart-dropdown.component";
+import { ModalService } from '../../../shared/services/modal.service';
+import { Subscription } from 'rxjs';
 
 declare var bootstrap: any;
 
@@ -26,14 +28,17 @@ declare var bootstrap: any;
   styleUrl: './auth.component.css',
 })
 
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
 
   private sharedService: SharedService;
   isAdminLoggedIn$;
   isMenuOpen = false;
 
+  private subscription: Subscription = new Subscription();
+
   constructor(
     private authService: AuthService,
+    private modalService: ModalService,
     private fb: FormBuilder,
     sharedService: SharedService,
     private router: Router,
@@ -91,6 +96,12 @@ export class AuthComponent implements OnInit {
     this.checkLoginStatus();
     this.initializeUpdateForm();
 
+    this.subscription.add(
+      this.modalService.openLoginModal$.subscribe(() => {
+        this.openLoginModal();
+      })
+    );
+
     document.getElementById('registerModal')?.addEventListener('hidden.bs.modal', () => {
       this.errorMessage = null;
       this.successMessage = null;
@@ -110,12 +121,24 @@ export class AuthComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
   showToast(message: string): void {
     this.toastMessage = message;
 
     setTimeout(() => {
       this.toastMessage = null;
     }, 5000);
+  }
+
+  openLoginModal() {
+    const modalElement = document.getElementById('loginModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
   }
 
   conditionalPasswordValidator(): ValidatorFn {
@@ -268,6 +291,8 @@ export class AuthComponent implements OnInit {
               document.body.style.paddingRight = '';
 
               this.showToast('Sikeres bejelentkezés!');
+
+              this.router.navigate(['/']);
             }, 200);
           }
 
@@ -385,5 +410,9 @@ export class AuthComponent implements OnInit {
         console.error('Hiba a profil adatok betöltése során:', error);
       },
     });
+  }
+
+  navigateToForgotPassword() {
+    this.router.navigate(['/forgot-password']);
   }
 }

@@ -7,6 +7,7 @@ import { environment } from '../../../environments/environment.development';
   providedIn: 'root',
 })
 export class AuthService {
+
   constructor(private http: HttpClient) { }
 
   private apiUrl = `${environment.apiUrl}`;
@@ -59,5 +60,29 @@ export class AuthService {
         Authorization: `Bearer ${sessionStorage.getItem('auth_token')}`,
       },
     });
+  }
+
+  /**
+   * Send forgot password request
+   * @param email
+   */
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  }
+
+  /**
+   * Reset password with token
+   * @param token
+   * @param email
+   * @param password
+   * @param password_confirmation
+   */
+  resetPassword(data: {
+    token: string,
+    email: string,
+    password: string,
+    password_confirmation: string
+  }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, data);
   }
 }
