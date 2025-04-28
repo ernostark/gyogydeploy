@@ -24,7 +24,7 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-    const token = sessionStorage.getItem('auth_token');
+    const token = localStorage.getItem('auth_token');
     return this.http.post<any>(
       `${this.apiUrl}/logout`,
       {},
@@ -46,7 +46,7 @@ export class AuthService {
   }
 
   updateUserProfile(data: any): Observable<any> {
-    const token = localStorage.getItem('admin_token') || sessionStorage.getItem('auth_token');
+    const token = localStorage.getItem('admin_token') || localStorage.getItem('auth_token');
     return this.http.put<any>(`${this.apiUrl}/profile`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ export class AuthService {
   getUserProfile(): Observable<any> {
     return this.http.get(`${this.apiUrl}/getprofile`, {
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem('auth_token')}`,
+        Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
       },
     });
   }

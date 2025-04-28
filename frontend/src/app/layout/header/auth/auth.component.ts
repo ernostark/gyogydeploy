@@ -182,7 +182,7 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 
   checkLoginStatus(): void {
-    const token = sessionStorage.getItem('auth_token');
+    const token = localStorage.getItem('auth_token');
     this.isLoggedIn = !!token;
   }
 
@@ -268,10 +268,10 @@ export class AuthComponent implements OnInit, OnDestroy {
             this.sharedService.updateAdminStatus(true);
 
             if (response.userToken) {
-              sessionStorage.setItem('auth_token', response.userToken);
+              localStorage.setItem('auth_token', response.userToken);
             }
           } else {
-            sessionStorage.setItem('auth_token', response.token);
+            localStorage.setItem('auth_token', response.token);
           }
 
           this.isLoggedIn = true;
@@ -338,7 +338,7 @@ export class AuthComponent implements OnInit, OnDestroy {
   onLogout(): void {
     this.authService.logout().subscribe({
       next: () => {
-        sessionStorage.removeItem('auth_token');
+        localStorage.removeItem('auth_token');
 
         this.isLoggedIn = false;
         this.router.navigate(['/']);
